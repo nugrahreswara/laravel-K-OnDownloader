@@ -6,6 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'NekoDrop Media Downloader - Download Media Favorit Anda')</title>
     <meta name="description" content="NekoDrop Media Downloader: Download video dan audio dari YouTube, TikTok, Instagram, dan Facebook dengan mudah dan cepat!">
+    <meta name="google-site-verification" content="oMYA8JTdhBECgn1xZ8UgdQJmVEbukjzRaERFFUIPyJA" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&display=swap" rel="stylesheet">

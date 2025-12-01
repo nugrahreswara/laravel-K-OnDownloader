@@ -99,9 +99,19 @@ class DownloadController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            // Check for specific video availability errors
+            $message = $e->getMessage();
+            if (strpos($message, 'unavailable or has been deleted') !== false ||
+                strpos($message, 'private or age-restricted') !== false) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 404); // Not Found for unavailable videos
+            }
+
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to start download: ' . $e->getMessage()
+                'message' => 'Failed to start download: ' . $message
             ], 500);
         }
     }
@@ -231,9 +241,19 @@ class DownloadController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            // Check for specific video availability errors
+            $message = $e->getMessage();
+            if (strpos($message, 'unavailable or has been deleted') !== false ||
+                strpos($message, 'private or age-restricted') !== false) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 404); // Not Found for unavailable videos
+            }
+
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to get available formats: ' . $e->getMessage()
+                'message' => 'Failed to get available formats: ' . $message
             ], 500);
         }
     }
@@ -503,5 +523,83 @@ class DownloadController extends Controller
         } catch (\Exception $e) {
             abort(404, 'Thumbnail proxy error');
         }
+    }
+
+    public function directDownload(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'url' => 'required|url',
+            'platform' => 'nullable|string',
+            'quality' => 'nullable|string',
+            'format' => 'nullable|string',
+            'audio_only' => 'nullable|boolean'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $url = $request->input('url');
+            $platform = $request->input('platform');
+
+            // Auto-detect platform if not provided
+            if (!$platform) {
+                $platform = DownloaderServiceFactory::detectPlatform($url);
+                if (!$platform) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Unsupported platform. Please specify a platform.'
+                    ], 400);
+                }
+            }
+
+            $service = DownloaderServiceFactory::create($platform);
+
+            $options = [
+                'quality' => $request->input('quality'),
+                'format' => $request->input('format'),
+                'audio_only' => $request->input('audio_only', false)
+            ];
+
+            // Get video info first
+            $videoInfo = $service->getVideoInfo($url);
+
+            // Stream the video directly to the user
+            return $service->streamVideo($url, $options, $videoInfo);
+
+        } catch (\Exception $e) {
+            // Check for specific video availability errors
+            $message = $e->getMessage();
+            if (strpos($message, 'unavailable or has been deleted') !== false ||
+                strpos($message, 'private or age-restricted') !== false) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 404); // Not Found for unavailable videos
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to start direct download: ' . $message
+            ], 500);
+        }
+    }
+
+    public function welcome(Request $request): JsonResponse
+    {
+        // Log request metadata
+        \Log::info('Request received', [
+            'method' => $request->method(),
+            'path' => $request->path()
+        ]);
+
+        // Return welcome message
+        return response()->json([
+            'message' => 'Welcome to the Laravel API Service!'
+        ]);
     }
 }

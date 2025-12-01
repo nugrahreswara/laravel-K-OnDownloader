@@ -700,60 +700,58 @@
                     </div>
                 </div>
 
-                <!-- Stats Cards - 2 Grid Mobile -->
-                <div class="stats-grid-mobile mb-6">
-                    <div class="grid grid-cols-2 gap-3">
-                        <!-- Card 1: Selesai -->
-                        <div class="stat-card-mobile bg-white border border-orange-300 rounded-xl p-4 text-center">
-                            <div class="stat-icon-mobile w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-2">
-                                <i class="fas fa-check-circle text-white text-lg"></i>
-                            </div>
-                            <div class="text-xl font-black text-gray-900 mb-1">{{ $completedCount }}</div>
-                            <div class="text-gray-600 font-semibold text-xs">Selesai</div>
+                <!-- Stats Cards - Desktop & Mobile -->
+                <div class="stats-grid mb-6">
+                    <!-- Card 1: Selesai -->
+                    <div class="stat-card futuristic-card">
+                        <div class="stat-icon bg-gradient-to-br from-green-500 to-green-600">
+                            <i class="fas fa-check-circle text-white text-2xl"></i>
                         </div>
-                        
-                        <!-- Card 2: Proses -->
-                        <div class="stat-card-mobile bg-white border border-orange-300 rounded-xl p-4 text-center">
-                            <div class="stat-icon-mobile w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-2">
-                                <i class="fas fa-spinner fa-pulse text-white text-lg"></i>
-                            </div>
-                            <div class="text-xl font-black text-gray-900 mb-1">{{ $processingCount }}</div>
-                            <div class="text-gray-600 font-semibold text-xs">Proses</div>
+                        <div class="text-2xl font-black text-gray-900 mb-1">{{ $completedCount }}</div>
+                        <div class="text-gray-600 font-semibold">Selesai</div>
+                    </div>
+                    
+                    <!-- Card 2: Proses -->
+                    <div class="stat-card futuristic-card">
+                        <div class="stat-icon bg-gradient-to-br from-blue-500 to-blue-600">
+                            <i class="fas fa-spinner fa-pulse text-white text-2xl"></i>
                         </div>
-                        
-                        <!-- Card 4: Menunggu -->
-                        <div class="stat-card-mobile bg-white border border-orange-300 rounded-xl p-4 text-center">
-                            <div class="stat-icon-mobile w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-2">
-                                <i class="fas fa-clock text-white text-lg"></i>
-                            </div>
-                            <div class="text-xl font-black text-gray-900 mb-1">{{ $waitingCount }}</div>
-                            <div class="text-gray-600 font-semibold text-xs">Menunggu</div>
+                        <div class="text-2xl font-black text-gray-900 mb-1">{{ $processingCount }}</div>
+                        <div class="text-gray-600 font-semibold">Proses</div>
+                    </div>
+                    
+                    <!-- Card 3: Menunggu -->
+                    <div class="stat-card futuristic-card">
+                        <div class="stat-icon bg-gradient-to-br from-yellow-500 to-yellow-600">
+                            <i class="fas fa-clock text-white text-2xl"></i>
                         </div>
-                        
-                        <!-- Card 5: Total -->
-                        <div class="stat-card-mobile bg-white border border-orange-300 rounded-xl p-4 text-center">
-                            <div class="stat-icon-mobile w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-2">
-                                <i class="fas fa-list text-white text-lg"></i>
-                            </div>
-                            <div class="text-xl font-black text-gray-900 mb-1">{{ $downloads->total() }}</div>
-                            <div class="text-gray-600 font-semibold text-xs">Total</div>
+                        <div class="text-2xl font-black text-gray-900 mb-1">{{ $waitingCount }}</div>
+                        <div class="text-gray-600 font-semibold">Menunggu</div>
+                    </div>
+                    
+                    <!-- Card 4: Total -->
+                    <div class="stat-card futuristic-card">
+                        <div class="stat-icon bg-gradient-to-br from-orange-500 to-orange-600">
+                            <i class="fas fa-list text-white text-2xl"></i>
                         </div>
+                        <div class="text-2xl font-black text-gray-900 mb-1">{{ $downloads->total() }}</div>
+                        <div class="text-gray-600 font-semibold">Total</div>
                     </div>
                 </div>
 
                 @if($downloads->count() > 0)
                     <!-- Filter & Search Section -->
-                    <div class="bg-white border border-orange-500 rounded-2xl p-6 mb-6">
+                    <div class="futuristic-card rounded-2xl p-6 mb-6">
                         <div class="filter-grid">
                             <div class="relative">
                                 <input type="text" 
                                        id="searchInput"
                                        placeholder="Cari download..."
-                                       class="futuristic-input w-full pl-12 pr-4 py-3 rounded-xl text-gray-800">
+                                       class="w-full pl-12 pr-4 py-3 rounded-xl text-gray-800 border border-gray-300 focus:border-orange-500 focus:outline-none">
                                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
                             </div>
                             
-                            <select id="filterStatus" class="futuristic-select px-4 py-3 rounded-xl text-gray-800">
+                            <select id="filterStatus" class="px-4 py-3 rounded-xl text-gray-800 border border-gray-300 focus:border-orange-500 focus:outline-none">
                                 <option value="">Semua Status</option>
                                 <option value="completed">Selesai</option>
                                 <option value="downloading">Proses</option>
@@ -761,7 +759,7 @@
                                 <option value="failed">Gagal</option>
                             </select>
                             
-                            <select id="filterPlatform" class="futuristic-select px-4 py-3 rounded-xl text-gray-800">
+                            <select id="filterPlatform" class="px-4 py-3 rounded-xl text-gray-800 border border-gray-300 focus:border-orange-500 focus:outline-none">
                                 <option value="">Semua Platform</option>
                                 <option value="youtube">YouTube</option>
                                 <option value="tiktok">TikTok</option>
@@ -770,25 +768,25 @@
                             </select>
                             
                             <button onclick="toggleAdvancedSearch()" 
-                                    class="futuristic-button bg-gray-600 text-white font-bold py-3 px-4 rounded-xl hover:shadow-xl transition-all duration-300">
+                                    class="bg-gray-600 text-white font-bold py-3 px-4 rounded-xl hover:shadow-xl transition-all duration-300">
                                 <i class="fas fa-sliders-h"></i>
                             </button>
                         </div>
                         
                         <!-- Advanced Search Panel -->
-                        <div id="advancedSearchPanel" class="hidden mt-6 pt-6 border-t border-orange-200">
+                        <div id="advancedSearchPanel" class="hidden mt-6 pt-6 border-t border-gray-200">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Mulai</label>
-                                    <input type="date" id="dateFrom" class="futuristic-input w-full px-4 py-2 rounded-lg text-gray-800">
+                                    <input type="date" id="dateFrom" class="w-full px-4 py-2 rounded-lg text-gray-800 border border-gray-300 focus:border-orange-500 focus:outline-none">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Selesai</label>
-                                    <input type="date" id="dateTo" class="futuristic-input w-full px-4 py-2 rounded-lg text-gray-800">
+                                    <input type="date" id="dateTo" class="w-full px-4 py-2 rounded-lg text-gray-800 border border-gray-300 focus:border-orange-500 focus:outline-none">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-2">Ukuran Minimum</label>
-                                    <select id="minSize" class="futuristic-select w-full px-4 py-2 rounded-lg text-gray-800">
+                                    <select id="minSize" class="w-full px-4 py-2 rounded-lg text-gray-800 border border-gray-300 focus:border-orange-500 focus:outline-none">
                                         <option value="">Semua Ukuran</option>
                                         <option value="1MB">> 1MB</option>
                                         <option value="10MB">> 10MB</option>
@@ -799,11 +797,11 @@
                             </div>
                             <div class="mt-4 flex justify-end gap-3">
                                 <button onclick="resetFilters()" 
-                                        class="futuristic-button bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:shadow-xl transition-all duration-300">
+                                        class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:shadow-xl transition-all duration-300">
                                     Reset
                                 </button>
                                 <button onclick="applyAdvancedFilters()" 
-                                        class="futuristic-button bg-red-500 text-white font-bold py-2 px-6 rounded-lg hover:shadow-xl transition-all duration-300">
+                                        class="bg-red-500 text-white font-bold py-2 px-6 rounded-lg hover:shadow-xl transition-all duration-300">
                                     Terapkan Filter
                                 </button>
                             </div>
@@ -821,6 +819,10 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
+                            <button onclick="toggleBulkActions()" class="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:shadow-xl transition-all duration-300">
+                                <i class="fas fa-check-square mr-2"></i>
+                                Pilih Beberapa
+                            </button>
                         </div>
                     </div>
 
@@ -837,9 +839,9 @@
                             
                             <!-- Selection Checkbox -->
                             <div class="absolute top-4 left-4 z-10 hidden" id="checkbox-{{ $download->id }}">
-                                <div class="futuristic-checkbox">
+                                <div class="w-6 h-6 bg-white rounded-md border-2 border-gray-300 flex items-center justify-center cursor-pointer">
                                     <input type="checkbox" class="sr-only" onchange="toggleItemSelection({{ $download->id }})">
-                                    <div class="futuristic-slider"></div>
+                                    <i class="fas fa-check text-orange-500 text-xs hidden"></i>
                                 </div>
                             </div>
 
@@ -1027,7 +1029,7 @@
                             </a>
                             
                             <!-- Quick Tips -->
-                            <div class="mt-8 text-left futuristic-card rounded-xl p-6">
+                            <div class="mt-8 futuristic-card rounded-xl p-6">
                                 <h4 class="font-black text-gray-900 mb-4 flex items-center gap-3">
                                     <i class="fas fa-lightbulb text-yellow-500 text-xl"></i>
                                     Tips Cepat
@@ -1278,12 +1280,14 @@
 
         function toggleItemSelection(id) {
             const checkbox = document.getElementById(`checkbox-${id}`);
+            const checkIcon = checkbox.querySelector('i');
+            
             if (selectedItems.has(id)) {
                 selectedItems.delete(id);
-                checkbox.querySelector('input').checked = false;
+                checkIcon.classList.add('hidden');
             } else {
                 selectedItems.add(id);
-                checkbox.querySelector('input').checked = true;
+                checkIcon.classList.remove('hidden');
             }
             updateSelectionUI();
         }
@@ -1302,7 +1306,9 @@
 
         function clearSelection() {
             selectedItems.clear();
-            document.querySelectorAll('.futuristic-checkbox input').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.download-item .absolute i').forEach(icon => {
+                icon.classList.add('hidden');
+            });
             updateSelectionUI();
         }
 

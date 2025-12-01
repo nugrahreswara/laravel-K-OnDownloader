@@ -241,6 +241,95 @@
             color: #ff8c00;
         }
 
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #e5e7eb;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff8c00;
+        }
+        
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        
+        .timeline-date {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+        
+        .timeline-content {
+            font-size: 14px;
+            color: #4b5563;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            color: #ff8c00;
+            border-bottom-color: #ff8c00;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Detail Grid */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        
+        @media (max-width: 640px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Animation Keyframes (Pertahankan, tapi pastikan tidak berlebihan) */
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -324,15 +413,24 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-8">
-                    @if($download->status === 'downloading' && isset($download->progress))
-                    <div class="glass-card p-6">
-                        <h2 class="section-title text-info">
-                            <i class="fas fa-chart-line"></i>
-                            STATUS PENGUNDUHAN
-                        </h2>
-
-                        <div class="mb-4">
+                <!-- Tab Navigation -->
+                <div class="glass-card p-6">
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab('status')">
+                            <i class="fas fa-chart-line mr-2"></i>Status Download
+                        </div>
+                        <div class="tab" onclick="switchTab('info')">
+                            <i class="fas fa-info-circle mr-2"></i>Informasi File
+                        </div>
+                        <div class="tab" onclick="switchTab('details')">
+                            <i class="fas fa-list-ul mr-2"></i>Detail Lengkap
+                        </div>
+                    </div>
+                    
+                    <!-- Tab Content: Status Download -->
+                    <div id="status-tab" class="tab-content active">
+                        @if($download->status === 'downloading' && isset($download->progress))
+                        <div class="mb-6">
                             <div class="flex justify-between items-center mb-2">
                                 <span class="text-2xl font-bold text-gray-800">{{ $download->progress }}%</span>
                                 <span class="text-sm font-medium text-gray-500">
@@ -344,7 +442,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+                        <div class="grid grid-cols-2 gap-4 text-sm">
                             <div class="flex items-center gap-2 text-gray-600">
                                 <i class="fas fa-tachometer-alt text-blue-500"></i>
                                 <span>**Kecepatan:** {{ $download->speed ?? 'Menghitung...' }}</span>
@@ -353,16 +451,25 @@
                                 <i class="fas fa-clock text-blue-500"></i>
                                 <span>**Estimasi Sisa:** {{ $download->eta ?? 'N/A' }}</span>
                             </div>
+                            <div class="flex items-center gap-2 text-gray-600">
+                                <i class="fas fa-hdd text-blue-500"></i>
+                                <span>**Sisa Ruang:** {{ $download->remaining_space ?? 'N/A' }}</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-gray-600">
+                                <i class="fas fa-server text-blue-500"></i>
+                                <span>**Server:** {{ $download->server ?? 'Utama' }}</span>
+                            </div>
                         </div>
+                        @else
+                        <div class="text-center py-8">
+                            <i class="fas fa-info-circle text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-500">Status download tidak tersedia atau download telah selesai/gagal.</p>
+                        </div>
+                        @endif
                     </div>
-                    @endif
-
-                    <div class="glass-card p-6">
-                        <h2 class="section-title">
-                            <i class="fas fa-folder-open text-yellow-400"></i>
-                            INFORMASI FILE
-                        </h2>
-                        
+                    
+                    <!-- Tab Content: Informasi File -->
+                    <div id="info-tab" class="tab-content">
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="info-stat-card">
                                 <i class="fas fa-file-video text-purple-500 text-xl mb-2 block"></i>
@@ -388,6 +495,122 @@
                                 <p class="text-lg font-bold text-gray-800 mt-1">{{ strtoupper($download->format ?? 'MP4') }}</p>
                             </div>
                         </div>
+                        
+                        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="info-stat-card">
+                                <i class="fas fa-film text-indigo-500 text-xl mb-2 block"></i>
+                                <p class="text-xs text-gray-500 font-medium">Resolusi</p>
+                                <p class="text-lg font-bold text-gray-800 mt-1">{{ $download->resolution ?? 'N/A' }}</p>
+                            </div>
+                            
+                            <div class="info-stat-card">
+                                <i class="fas fa-volume-up text-pink-500 text-xl mb-2 block"></i>
+                                <p class="text-xs text-gray-500 font-medium">Audio</p>
+                                <p class="text-lg font-bold text-gray-800 mt-1">{{ $download->audio_format ?? 'Stereo' }}</p>
+                            </div>
+                            
+                            <div class="info-stat-card">
+                                <i class="fas fa-tachometer-alt text-yellow-500 text-xl mb-2 block"></i>
+                                <p class="text-xs text-gray-500 font-medium">Bitrate</p>
+                                <p class="text-lg font-bold text-gray-800 mt-1">{{ $download->bitrate ?? 'N/A' }}</p>
+                            </div>
+                            
+                            <div class="info-stat-card">
+                                <i class="fas fa-closed-captioning text-blue-500 text-xl mb-2 block"></i>
+                                <p class="text-xs text-gray-500 font-medium">Subtitle</p>
+                                <p class="text-lg font-bold text-gray-800 mt-1">{{ $download->subtitle ?? 'Tidak Ada' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab Content: Detail Lengkap -->
+                    <div id="details-tab" class="tab-content">
+                        <div class="detail-grid">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-link text-orange-400"></i>
+                                    URL Sumber
+                                </span>
+                                <span class="info-value text-xs truncate max-w-[200px]">{{ $download->source_url ?? 'N/A' }}</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-user text-blue-400"></i>
+                                    Pengunggah
+                                </span>
+                                <span class="info-value">{{ $download->uploader ?? 'N/A' }}</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-eye text-green-400"></i>
+                                    Jumlah View
+                                </span>
+                                <span class="info-value">{{ $download->view_count ?? 'N/A' }}</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-thumbs-up text-purple-400"></i>
+                                    Jumlah Like
+                                </span>
+                                <span class="info-value">{{ $download->like_count ?? 'N/A' }}</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-calendar text-red-400"></i>
+                                    Tanggal Upload
+                                </span>
+                                <span class="info-value">{{ $download->upload_date ?? 'N/A' }}</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-tag text-yellow-400"></i>
+                                    Kategori
+                                </span>
+                                <span class="info-value">{{ $download->category ?? 'N/A' }}</span>
+                            </div>
+                        </div>
+                        
+                        @if($download->description)
+                        <div class="mt-6">
+                            <h3 class="text-sm font-semibold text-gray-700 mb-2">Deskripsi</h3>
+                            <p class="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">{{ $download->description }}</p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                
+                <!-- Riwayat Aktivitas -->
+                <div class="glass-card p-6">
+                    <h2 class="section-title">
+                        <i class="fas fa-history text-blue-500"></i>
+                        RIWAYAT AKTIVITAS
+                    </h2>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">{{ $download->created_at->format('d M Y, H:i') }}</div>
+                            <div class="timeline-content">Download dimulai</div>
+                        </div>
+                        
+                        @if($download->status !== 'pending')
+                        <div class="timeline-item">
+                            <div class="timeline-date">{{ $download->updated_at->format('d M Y, H:i') }}</div>
+                            <div class="timeline-content">
+                                @if($download->status === 'downloading')
+                                    Sedang mengunduh ({{ $download->progress ?? 0 }}%)
+                                @elseif($download->status === 'completed')
+                                    Download selesai
+                                @elseif($download->status === 'failed')
+                                    Download gagal: {{ $download->error_message ?? 'Kesalahan tidak diketahui' }}
+                                @endif
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -497,6 +720,48 @@
                                 ID Download
                             </span>
                             <span class="info-value font-mono text-xs">{{ substr($download->id, 0, 8) }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Informasi Tambahan -->
+                <div class="glass-card p-6">
+                    <h2 class="section-title text-gray-700">
+                        <i class="fas fa-info-circle"></i>
+                        INFORMASI SISTEM
+                    </h2>
+                    
+                    <div class="space-y-0">
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-desktop text-purple-400"></i>
+                                Perangkat
+                            </span>
+                            <span class="info-value">{{ $download->device ?? 'Desktop' }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-wifi text-blue-400"></i>
+                                Koneksi
+                            </span>
+                            <span class="info-value">{{ $download->connection_type ?? 'WiFi' }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-map-marker-alt text-red-400"></i>
+                                Lokasi Server
+                            </span>
+                            <span class="info-value">{{ $download->server_location ?? 'Indonesia' }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-code-branch text-green-400"></i>
+                                Versi Aplikasi
+                            </span>
+                            <span class="info-value">{{ $download->app_version ?? 'v2.1.0' }}</span>
                         </div>
                     </div>
                 </div>
@@ -798,6 +1063,22 @@
             toast.style.animation = 'slideOutRight 0.3s ease-in';
             setTimeout(() => toast.remove(), 300);
         }, 3000);
+    }
+    
+    // Tab switching functionality
+    function switchTab(tabName) {
+        // Remove active class from all tabs and tab contents
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // Add active class to selected tab and content
+        event.target.closest('.tab').classList.add('active');
+        document.getElementById(tabName + '-tab').classList.add('active');
     }
 
     // Keyframes for Toast (Add to style block in head if needed, or keep here for simplicity)

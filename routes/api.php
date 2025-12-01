@@ -12,4 +12,5 @@ Route::get('/user', function (Request $request) {
 Route::post('/video-info', [DownloadController::class, 'getVideoInfo']);
 Route::post('/download', [DownloadController::class, 'store']);
 Route::get('/stats', [DownloadController::class, 'getStats'])->name('stats');
+Route::get('/welcome', [DownloadController::class, 'welcome']);
 

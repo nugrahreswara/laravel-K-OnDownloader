@@ -28,6 +28,7 @@ Route::prefix('downloads')->name('downloads.')->group(function () {
     // API routes for AJAX
     Route::post('/video-info', [DownloadController::class, 'getVideoInfo'])->name('video-info');
     Route::post('/formats', [DownloadController::class, 'getAvailableFormats'])->name('formats');
+    Route::post('/direct-download', [DownloadController::class, 'directDownload'])->name('direct-download');
 });
 
 // Platform routes

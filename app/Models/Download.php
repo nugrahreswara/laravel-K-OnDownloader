@@ -97,4 +97,112 @@ class Download extends Model
 
         return $mimeTypes[strtolower($extension)] ?? 'video/mp4';
     }
+
+    // Accessors for metadata fields
+    public function getUploaderAttribute(): ?string
+    {
+        return $this->metadata['uploader'] ?? null;
+    }
+
+    public function getViewCountAttribute(): ?string
+    {
+        return $this->metadata['view_count'] ?? null;
+    }
+
+    public function getLikeCountAttribute(): ?string
+    {
+        return $this->metadata['like_count'] ?? null;
+    }
+
+    public function getUploadDateAttribute(): ?string
+    {
+        return $this->metadata['upload_date'] ?? null;
+    }
+
+    public function getCategoryAttribute(): ?string
+    {
+        return $this->metadata['categories'] ?? $this->metadata['category'] ?? null;
+    }
+
+    public function getDescriptionAttribute(): ?string
+    {
+        return $this->metadata['description'] ?? null;
+    }
+
+    public function getSourceUrlAttribute(): ?string
+    {
+        return $this->metadata['webpage_url'] ?? $this->metadata['url'] ?? null;
+    }
+
+    public function getQualityAttribute(): ?string
+    {
+        return $this->metadata['quality'] ?? null;
+    }
+
+    public function getFormatAttribute(): ?string
+    {
+        return $this->metadata['format'] ?? 'MP4';
+    }
+
+    public function getResolutionAttribute(): ?string
+    {
+        return $this->metadata['resolution'] ?? null;
+    }
+
+    public function getAudioFormatAttribute(): ?string
+    {
+        return $this->metadata['audio_format'] ?? 'Stereo';
+    }
+
+    public function getBitrateAttribute(): ?string
+    {
+        return $this->metadata['bitrate'] ?? null;
+    }
+
+
+
+    public function getProgressAttribute(): ?int
+    {
+        return $this->attributes['progress'] ?? null;
+    }
+
+    public function getDownloadedSizeAttribute(): ?string
+    {
+        return $this->attributes['downloaded_size'] ?? null;
+    }
+
+    public function getSpeedAttribute(): ?string
+    {
+        return $this->attributes['speed'] ?? null;
+    }
+
+    public function getEtaAttribute(): ?string
+    {
+        return $this->attributes['eta'] ?? null;
+    }
+
+    public function getRemainingSpaceAttribute(): ?string
+    {
+        return $this->attributes['remaining_space'] ?? null;
+    }
+
+    public function getDeviceAttribute(): ?string
+    {
+        return $this->attributes['device'] ?? 'Desktop';
+    }
+
+    public function getConnectionTypeAttribute(): ?string
+    {
+        return $this->attributes['connection_type'] ?? 'WiFi';
+    }
+
+    public function getServerLocationAttribute(): ?string
+    {
+        return $this->attributes['server_location'] ?? 'Indonesia';
+    }
+
+    public function getAppVersionAttribute(): ?string
+    {
+        return $this->attributes['app_version'] ?? 'v2.1.0';
+    }
 }
